@@ -6,8 +6,7 @@ public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IP
 	Vector2 targetPosition;
 
 	float moveSpeed = 15f;
-	float zoomFactor = 5f;
-	float ySelectedOffset = 110f;
+	float zoomFactor = 5f;	
 	int indexPosition;
 
 	public Vector2 position {
@@ -62,7 +61,7 @@ public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IP
 		Vector2 target = targetPosition;
 
 		if (isSelected)
-			target = new Vector2(targetPosition.x, targetPosition.y + ySelectedOffset);			
+			target = new Vector2(targetPosition.x, 0);			
 
 		if (transform.position.x != target.x || transform.position.y != target.y) {
 			float step = moveSpeed * Time.deltaTime * 100;

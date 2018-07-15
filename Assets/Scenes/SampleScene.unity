@@ -508,8 +508,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8e082b96d783af4d9c1007b010ae4f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  overlapPercent: 0.8
-  baseYOffset: 100
+  overlapPercent: 0.5
+  baseYOffset: 0
   curveYOffset: 15
   rotationFactor: 3
-  startCards: 20
+  startCards: 8
