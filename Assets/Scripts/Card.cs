@@ -7,7 +7,7 @@ public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IP
 
 	float moveSpeed = 15f;
 	float zoomFactor = 5f;
-	float ySelectedOffset = 55f;
+	float ySelectedOffset = 110f;
 	int indexPosition;
 
 	public Vector2 position {
@@ -33,17 +33,28 @@ public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IP
 		set {
 
 			if (value)
-				transform.eulerAngles = new Vector3(0, 0, 0);
+				transform.eulerAngles = new Vector3(0, 0, 0);				
 			else
 				transform.eulerAngles = new Vector3(0, 0, _angle);
 
+			zoomed = value;
 			_isSelected = value;
 
 		}
 	}
 
+	Animator animator;
+	bool zoomed {
+		get { return animator.GetBool("zoomed"); }
+		set { animator.SetBool("zoomed", value); }
+	}
+
 	public float width {
 		get { return 200f; }
+	}
+
+	void Awake () {
+		animator = GetComponent<Animator>();
 	}
 
 	void Update() {

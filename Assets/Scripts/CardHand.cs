@@ -5,10 +5,11 @@ using UnityEngine;
 public class CardHand : MonoBehaviour {
 
 	[Header("Card Position Options")]
-	public float overlapPercent = 0.5f;
-	public float baseYOffset = 60f;
+	public float overlapPercent = 0.4f;
+	public float baseYOffset = 40f;
 	public float curveYOffset = 10f;
-	public int rotationFactor = 5;
+	public int rotationFactor = 3;
+	public int startCards = 6;
 
 	List<Card> cards;
 
@@ -21,13 +22,12 @@ public class CardHand : MonoBehaviour {
 
 	void Start () {
 
-		for(int i = 0; i < 8; i++) {
+		for(int i = 0; i < startCards; i++) {
 			GameObject card = Instantiate(Resources.Load<GameObject>("Prefabs/Card"), transform);
 			addCard(card.GetComponent<Card>());
 		}
 
 	}
-
 
 	public void addCard(Card card) {		
 		
@@ -68,10 +68,14 @@ public class CardHand : MonoBehaviour {
 
 		int middleCard = Mathf.FloorToInt(cards.Count / 2);
 
-		if (position < middleCard) {
-			return position *= -rotationFactor;
-		} else if (position > middleCard) {
-			return position *= rotationFactor;
+		int d = 0;
+		if (position > middleCard)
+			d = position - middleCard + 1;
+		else if (position < middleCard)
+			d = ((middleCard - position) + 1) * -1;
+
+		if (position != middleCard) {
+			return rotationFactor * -d;
 		} else {
 			return 0;
 		}
@@ -115,13 +119,16 @@ public class CardHand : MonoBehaviour {
 
 		int middleCard = Mathf.FloorToInt(cards.Count / 2);
 
-		if (position < middleCard) {
-			return offset * -1;
-		} else if (position > middleCard) {
-			return offset;
-		} else {
-			return 0;
-		}
+		int d = 0;
+		if (position > middleCard)
+			d = position - middleCard;
+		else if (position < middleCard)
+			d = (middleCard - position) * -1;
+
+		if (position != middleCard) 
+			return offset * d;		
+		else
+			return 0;		
 
 	}
 
@@ -162,10 +169,14 @@ public class CardHand : MonoBehaviour {
 
 		int middleCard = Mathf.FloorToInt(cards.Count / 2);
 
-		if (position < middleCard) {
-			return curveYOffset * -1;
-		} else if (position > middleCard) {
-			return curveYOffset;
+		int d = 0;
+		if (position > middleCard)
+			d = position - middleCard + 1;
+		else if (position < middleCard)
+			d = (middleCard - position) + 1;
+
+		if (position != middleCard) {
+			return curveYOffset * -d;
 		} else {
 			return 0;
 		}
@@ -188,7 +199,5 @@ public class CardHand : MonoBehaviour {
 		return curveYOffset * d * -1;
 
 	}
-
-
 		
 }
