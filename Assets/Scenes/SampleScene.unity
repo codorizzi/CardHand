@@ -509,4 +509,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   overlapPercent: 0.5
-  defaultYOffset: 60
+  baseYOffset: 60
+  curveYOffset: 15
+  rotationFactor: 4

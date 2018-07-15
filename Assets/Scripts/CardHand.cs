@@ -6,7 +6,9 @@ public class CardHand : MonoBehaviour {
 
 	[Header("Card Position Options")]
 	public float overlapPercent = 0.5f;
-	public float defaultYOffset = 60f;
+	public float baseYOffset = 60f;
+	public float curveYOffset = 10f;
+	public int rotationFactor = 5;
 
 	List<Card> cards;
 
@@ -19,7 +21,7 @@ public class CardHand : MonoBehaviour {
 
 	void Start () {
 
-		for(int i = 0; i < 4; i++) {
+		for(int i = 0; i < 8; i++) {
 			GameObject card = Instantiate(Resources.Load<GameObject>("Prefabs/Card"), transform);
 			addCard(card.GetComponent<Card>());
 		}
@@ -43,10 +45,57 @@ public class CardHand : MonoBehaviour {
 
 			float xOffset = getCardXOffset(card.width, i);
 			float x = (panelWidth / 2) + xOffset;
-
-			card.position = new Vector2(x, defaultYOffset);			
+			float y = baseYOffset + getCardYOffset(i);
+			
+			card.position = new Vector2(x, y);
+			card.angle = getCardRotation(i);
 
 		}
+	}
+
+	private float getCardRotation(int position) {
+		bool isOddNumber = (cards.Count % 2) == 0 ? false : true;
+
+		if (isOddNumber) {
+			return getOddRotation(position);
+		} else {
+			return getEvenRotation(position);
+		}
+
+	}
+
+	private float getOddRotation(int position) {
+
+		int middleCard = Mathf.FloorToInt(cards.Count / 2);
+
+		if (position < middleCard) {
+			return position *= -rotationFactor;
+		} else if (position > middleCard) {
+			return position *= rotationFactor;
+		} else {
+			return 0;
+		}
+
+	}
+
+	private float getEvenRotation(int position) {
+
+		int middleRight = cards.Count / 2;
+		int middleLeft = middleRight - 1;
+
+		if (position == middleLeft)
+			return rotationFactor;
+		else if (position == middleRight)
+			return rotationFactor * -1;
+
+		int d = 0;
+		if (position > middleRight)
+			d = position - middleRight + 1;
+		else if (position < middleLeft)
+			d = ((middleLeft - position) + 1)* -1;		
+
+		return rotationFactor * d * -1;		
+
 	}
 
 	private float getCardXOffset(float cardWidth, int position) {
@@ -91,17 +140,54 @@ public class CardHand : MonoBehaviour {
 		if (position > middleRight)
 			d = position - middleRight;
 		else if (position < middleLeft)
-			d = (middleLeft - position) * -1;
-
-		//Debug.Log(string.Format("p: {0}, d: {1}, mo: {2}, o: {3}", position, d, middleOffset, offset));
+			d = (middleLeft - position) * -1;		
 
 		return middleOffset + d * offset;
 
 	}
 
-	private float getCardYOffset(Card card, int position) { return 0f; }
+	private float getCardYOffset(int position) {
+		
+		bool isOddNumber = (cards.Count % 2) == 0 ? false : true;
 
-	private float getCardRotation(Card card, int position) { return 0f; }
+		if (isOddNumber) {
+			return getCardYOddOffset(position);
+		} else {
+			return getCardYEvenOffset(position);
+		}
+
+	}
+
+	private float getCardYOddOffset(int position) {
+
+		int middleCard = Mathf.FloorToInt(cards.Count / 2);
+
+		if (position < middleCard) {
+			return curveYOffset * -1;
+		} else if (position > middleCard) {
+			return curveYOffset;
+		} else {
+			return 0;
+		}
+
+	}
+
+	private float getCardYEvenOffset(int position) {
+
+		int middleRight = cards.Count / 2;
+		int middleLeft = middleRight - 1;		
+
+		int d = 0;
+		if (position > middleRight)
+			d = position - middleRight;
+		else if (position < middleLeft)
+			d = (middleLeft - position);
+
+		//Debug.Log(string.Format("p: {0}, d: {1}", position, d));
+
+		return curveYOffset * d * -1;
+
+	}
 
 
 		
