@@ -44,8 +44,7 @@ public class CardHand : MonoBehaviour {
 			float xOffset = getCardXOffset(card.width, i);
 			float x = (panelWidth / 2) + xOffset;
 
-			card.position = new Vector2(x, defaultYOffset);
-			card.sortOrder = i;
+			card.position = new Vector2(x, defaultYOffset);			
 
 		}
 	}
@@ -94,7 +93,7 @@ public class CardHand : MonoBehaviour {
 		else if (position < middleLeft)
 			d = (middleLeft - position) * -1;
 
-		Debug.Log(string.Format("p: {0}, d: {1}, mo: {2}, o: {3}", position, d, middleOffset, offset));
+		//Debug.Log(string.Format("p: {0}, d: {1}, mo: {2}, o: {3}", position, d, middleOffset, offset));
 
 		return middleOffset + d * offset;
 

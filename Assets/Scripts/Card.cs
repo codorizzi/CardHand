@@ -1,44 +1,60 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.EventSystems;
 
-[RequireComponent(typeof(Canvas))]
-public class Card : MonoBehaviour {
-	
+public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler {
+
 	Vector2 targetPosition;
 
 	float moveSpeed = 10f;
+	float ySelectedOffset = 55f;
+	int indexPosition;
 
 	public Vector2 position {
 		get { return targetPosition; }
-		set { targetPosition = value; }
-	}
-
-	public int sortOrder {
 		set {
-			GetComponent<Canvas>().sortingOrder = value;
+			targetPosition = value;
+			indexPosition = transform.GetSiblingIndex();
 		}
 	}
+
+	bool isSelected = false;	
 
 	public float width {
 		get { return 200f; }
 	}
 
-	void Awake () {
-		GetComponent<Canvas>().overrideSorting = true;
-	}
+	void Update() {
 
-	void Update () {
+		Vector2 target = targetPosition;
 
-		if (transform.position.x != targetPosition.x || transform.position.y != targetPosition.y) {
+		if (isSelected)
+			target = new Vector2(targetPosition.x, targetPosition.y + ySelectedOffset);
+
+		if (transform.position.x != target.x || transform.position.y != target.y) {
 			float step = moveSpeed * Time.deltaTime * 100;
-			transform.position = Vector2.MoveTowards(transform.position, targetPosition, step);
+			transform.position = Vector2.MoveTowards(transform.position, target, step);
 		}
-		
+
 	}
 
 	public void setPosition(Vector2 position) {
 		transform.position = position;
+	}
+
+	public void OnPointerDown(PointerEventData eventData) {
+	}
+
+	public void OnPointerUp(PointerEventData eventData) {
+	}
+
+	public void OnPointerEnter(PointerEventData eventData) {
+		isSelected = true;
+		transform.SetSiblingIndex(99);
+	}
+
+	public void OnPointerExit(PointerEventData eventData) {
+		isSelected = false;
+		transform.SetSiblingIndex(indexPosition);
 	}
 
 }
