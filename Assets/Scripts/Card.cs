@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler {
+public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, 
+	IPointerDownHandler, IPointerUpHandler, ISelectHandler, IDeselectHandler {
 
 	Vector2 targetPosition;
 
@@ -74,20 +75,30 @@ public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IP
 		transform.position = position;
 	}	
 
-	public void OnPointerDown(PointerEventData eventData) {
+	public void OnPointerDown(PointerEventData eventData) {		
 	}
 
-	public void OnPointerUp(PointerEventData eventData) {
-	}
+	public void OnPointerUp(PointerEventData eventData) {		
+	} 
 
 	public void OnPointerEnter(PointerEventData eventData) {
 		isSelected = true;
-		transform.SetSiblingIndex(99);
+		transform.SetSiblingIndex(99);		
 	}
 
 	public void OnPointerExit(PointerEventData eventData) {
 		isSelected = false;
-		transform.SetSiblingIndex(indexPosition);
+		transform.SetSiblingIndex(indexPosition);		
+	}
+
+	public void OnSelect(BaseEventData eventData) {
+		isSelected = true;
+		transform.SetSiblingIndex(99);		
+	}
+
+	public void OnDeselect(BaseEventData eventData) {
+		isSelected = false;
+		transform.SetSiblingIndex(indexPosition);		
 	}
 
 }
