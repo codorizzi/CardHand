@@ -5,6 +5,7 @@ public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
 	IPointerDownHandler, IPointerUpHandler, ISelectHandler, IDeselectHandler {
 
 	Vector2 targetPosition;
+	Canvas canvas;
 
 	float moveSpeed = 15f;
 	float zoomFactor = 5f;	
@@ -40,6 +41,11 @@ public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
 			zoomed = value;
 			_isSelected = value;
 
+			if(value)
+				canvas.sortingOrder = 99;
+			else
+				canvas.sortingOrder = _sortOrder;
+
 		}
 	}
 
@@ -53,8 +59,17 @@ public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
 		get { return 200f; }
 	}
 
+	public int _sortOrder;
+	public int sortOrder {
+		set {
+			_sortOrder = value;
+			canvas.sortingOrder = value;
+		}
+	}
+
 	void Awake () {
 		animator = GetComponent<Animator>();
+		canvas = GetComponent<Canvas>();
 	}
 
 	void Update() {
@@ -82,23 +97,19 @@ public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
 	} 
 
 	public void OnPointerEnter(PointerEventData eventData) {
-		isSelected = true;
-		transform.SetSiblingIndex(99);		
+		isSelected = true;		
 	}
 
 	public void OnPointerExit(PointerEventData eventData) {
-		isSelected = false;
-		transform.SetSiblingIndex(indexPosition);		
+		isSelected = false;			
 	}
 
 	public void OnSelect(BaseEventData eventData) {
 		isSelected = true;
-		transform.SetSiblingIndex(99);		
 	}
 
 	public void OnDeselect(BaseEventData eventData) {
-		isSelected = false;
-		transform.SetSiblingIndex(indexPosition);		
+		isSelected = false;		
 	}
 
 }

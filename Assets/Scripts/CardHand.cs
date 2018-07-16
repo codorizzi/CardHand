@@ -50,6 +50,8 @@ public class CardHand : MonoBehaviour {
 			card.position = new Vector2(x, y);
 			card.angle = getCardRotation(i);
 
+			card.sortOrder = i;
+
 		}
 	}
 
