@@ -7,15 +7,12 @@ public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
 	Vector2 targetPosition;
 	Canvas canvas;
 
-	float moveSpeed = 15f;
-	float zoomFactor = 5f;	
-	int indexPosition;
+	float moveSpeed = 15f;		
 
 	public Vector2 position {
 		get { return targetPosition; }
 		set {
-			targetPosition = value;
-			indexPosition = transform.GetSiblingIndex();
+			targetPosition = value;			
 		}
 	}
 
@@ -56,10 +53,12 @@ public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
 	}
 
 	public float width {
-		get { return 200f; }
+		get {
+			return ((RectTransform)transform).rect.width * transform.localScale.x;
+		}
 	}
 
-	public int _sortOrder;
+	int _sortOrder;
 	public int sortOrder {
 		set {
 			_sortOrder = value;

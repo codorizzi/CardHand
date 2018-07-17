@@ -510,6 +510,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   overlapPercent: 0.5
   baseYOffset: 0
-  curveYOffset: 15
-  rotationFactor: 3
   startCards: 8
