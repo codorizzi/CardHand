@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Events;
 
 public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, 
 	IPointerDownHandler, IPointerUpHandler, ISelectHandler, IDeselectHandler {
@@ -7,7 +8,7 @@ public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
 	Vector2 targetPosition;
 	Canvas canvas;
 
-	float moveSpeed = 15f;		
+	float moveSpeed = 15f;	
 
 	public Vector2 position {
 		get { return targetPosition; }
@@ -23,25 +24,25 @@ public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
 			_angle = value;
 			transform.eulerAngles = new Vector3(0, 0, value);
 		}
-	}
-
+	}	
+	
 	bool _isSelected = false;
 	public bool isSelected {
 		get { return _isSelected; }
-		set {
-
-			if (value)
-				transform.eulerAngles = new Vector3(0, 0, 0);				
-			else
-				transform.eulerAngles = new Vector3(0, 0, _angle);
+		set {						
 
 			zoomed = value;
 			_isSelected = value;
 
-			if(value)
-				canvas.sortingOrder = 99;
-			else
+			if (value) {
+				transform.eulerAngles = new Vector3(0, 0, 0);
+				canvas.sortingOrder = 99;				
+				selectedEvent.Invoke(this);
+			} else { 
 				canvas.sortingOrder = _sortOrder;
+				transform.eulerAngles = new Vector3(0, 0, _angle);
+				deselectedEvent.Invoke(this);
+			}
 
 		}
 	}
@@ -66,17 +67,29 @@ public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
 		}
 	}
 
+	[System.Serializable]
+	public class SelectedEvent : UnityEvent<Card> { }
+	public SelectedEvent selectedEvent;
+
+	[System.Serializable]
+	public class DeselectedEvent : UnityEvent<Card> { }
+	public DeselectedEvent deselectedEvent;
+
 	void Awake () {
+
+		if (selectedEvent == null) selectedEvent = new SelectedEvent();
+		if (deselectedEvent == null) deselectedEvent = new DeselectedEvent();
+
 		animator = GetComponent<Animator>();
 		canvas = GetComponent<Canvas>();
 	}
 
 	void Update() {
 
-		Vector2 target = targetPosition;
+	Vector2 target = new Vector2(targetPosition.x, targetPosition.y);
 
 		if (isSelected)
-			target = new Vector2(targetPosition.x, 0);			
+			target = new Vector2(targetPosition.x, 0);	
 
 		if (transform.position.x != target.x || transform.position.y != target.y) {
 			float step = moveSpeed * Time.deltaTime * 100;
@@ -104,7 +117,7 @@ public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
 	}
 
 	public void OnSelect(BaseEventData eventData) {
-		isSelected = true;
+		isSelected = true;		
 	}
 
 	public void OnDeselect(BaseEventData eventData) {

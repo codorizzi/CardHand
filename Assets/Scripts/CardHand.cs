@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
+using System.Linq;
 
 public class CardHand : MonoBehaviour {
 
@@ -15,7 +17,19 @@ public class CardHand : MonoBehaviour {
 
 	float panelWidth;
 
+	[System.Serializable]
+	public class CardSelected : UnityEvent<Card> {}
+	public CardSelected cardSelected;
+
+	[System.Serializable]
+	public class CardDeselected : UnityEvent<Card> { }
+	public CardDeselected cardDeselected;
+
 	void Awake() {
+
+		if (cardSelected == null) cardSelected = new CardSelected();
+		if (cardDeselected == null) cardDeselected = new CardDeselected();
+
 		cards = new List<Card>();
 		panelWidth = ((RectTransform)transform).rect.width;
 		instance = this;
@@ -33,6 +47,9 @@ public class CardHand : MonoBehaviour {
 	public void addCard(Card card) {		
 		
 		cards.Add(card);
+
+		card.selectedEvent.AddListener(handleCardSelect);
+		card.deselectedEvent.AddListener(handleCardDeselect);
 
 		rebuildHand();
 
@@ -105,5 +122,19 @@ public class CardHand : MonoBehaviour {
 		return middleOffset + d * offset;
 
 	}
+
+	private void handleCardSelect(Card card) {
+
+		cardSelected.Invoke(card);			
+
+	}
+
+	private void handleCardDeselect(Card card) {
+
+		cardDeselected.Invoke(card);		
+
+	}
 		
+
+
 }
