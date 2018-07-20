@@ -9,11 +9,14 @@ public class CardHand : MonoBehaviour {
 	public static CardHand instance;
 
 	[Header("Card Position Options")]
-	public float overlapPercent = 0.4f;
+	public float overlapPercent = 0.6f;
 	public float baseYOffset = 40f;		
 	public int startCards = 6;
 
 	List<Card> cards;
+
+	public GameObject discardPile;
+	public GameObject drawPile;
 
 	float panelWidth;
 
@@ -37,23 +40,33 @@ public class CardHand : MonoBehaviour {
 
 	void Start () {
 
-		for(int i = 0; i < startCards; i++) {
+		/*for(int i = 0; i < startCards; i++) {
 			GameObject card = Instantiate(Resources.Load<GameObject>("Prefabs/Card"), transform);
-			addCard(card.GetComponent<Card>());
-		}
+			//drawCard(card.GetComponent<Card>());
+		}*/
 
 	}
 
-	public void addCard(Card card) {		
-		
+	public void addCard(Card card) {
+	
 		cards.Add(card);
+		card.transform.SetParent(transform);
 
 		card.selectedEvent.AddListener(handleCardSelect);
 		card.deselectedEvent.AddListener(handleCardDeselect);
+		card.clickedEvent.AddListener(handleCardClick);
 
 		rebuildHand();
 
-	}	
+	}
+
+	public void discardCard(Card card) {
+
+	}
+
+	public void playCard(Card card) {
+		//card.played = true;
+	}
 
 	private void rebuildHand() {		
 
@@ -75,6 +88,9 @@ public class CardHand : MonoBehaviour {
 	private float getCardXOffset(float cardWidth, int position) {
 
 		float offset = cardWidth * overlapPercent;
+
+		Debug.Log(cardWidth);
+
 		bool isOddNumber = (cards.Count % 2) == 0 ? false : true;		
 
 		if (isOddNumber) {
@@ -124,17 +140,14 @@ public class CardHand : MonoBehaviour {
 	}
 
 	private void handleCardSelect(Card card) {
-
 		cardSelected.Invoke(card);			
-
 	}
 
 	private void handleCardDeselect(Card card) {
-
 		cardDeselected.Invoke(card);		
+	}		
 
+	private void handleCardClick(Card card) {		
 	}
-		
-
 
 }

@@ -1,19 +1,21 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
-public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, 
+public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
 	IPointerDownHandler, IPointerUpHandler, ISelectHandler, IDeselectHandler {
 
 	Vector2 targetPosition;
 	Canvas canvas;
 
-	float moveSpeed = 15f;	
+	float moveSpeed = 15f;
+	float cardScale = 0.2f;
 
 	public Vector2 position {
 		get { return targetPosition; }
 		set {
-			targetPosition = value;			
+			targetPosition = value;
 		}
 	}
 
@@ -24,21 +26,21 @@ public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
 			_angle = value;
 			transform.eulerAngles = new Vector3(0, 0, value);
 		}
-	}	
-	
+	}
+
 	bool _isSelected = false;
 	public bool isSelected {
 		get { return _isSelected; }
-		set {						
+		set {
 
-			zoomed = value;
+			//zoomed = value;
 			_isSelected = value;
 
 			if (value) {
 				transform.eulerAngles = new Vector3(0, 0, 0);
-				canvas.sortingOrder = 99;				
+				canvas.sortingOrder = 99;
 				selectedEvent.Invoke(this);
-			} else { 
+			} else {
 				canvas.sortingOrder = _sortOrder;
 				transform.eulerAngles = new Vector3(0, 0, _angle);
 				deselectedEvent.Invoke(this);
@@ -47,15 +49,9 @@ public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
 		}
 	}
 
-	Animator animator;
-	bool zoomed {
-		get { return animator.GetBool("zoomed"); }
-		set { animator.SetBool("zoomed", value); }
-	}
-
 	public float width {
 		get {
-			return ((RectTransform)transform).rect.width * transform.localScale.x;
+			return ((RectTransform)transform).rect.width * cardScale;
 		}
 	}
 
@@ -66,6 +62,11 @@ public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
 			canvas.sortingOrder = value;
 		}
 	}
+	
+	public bool isVisible {
+		get { return GetComponent<Image>().enabled; }
+		set { GetComponent<Image>().enabled = value; }
+	}
 
 	[System.Serializable]
 	public class SelectedEvent : UnityEvent<Card> { }
@@ -75,18 +76,24 @@ public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
 	public class DeselectedEvent : UnityEvent<Card> { }
 	public DeselectedEvent deselectedEvent;
 
+	[System.Serializable]
+	public class ClickedEvent : UnityEvent<Card> { }
+	public ClickedEvent clickedEvent;
+
 	void Awake () {
 
 		if (selectedEvent == null) selectedEvent = new SelectedEvent();
 		if (deselectedEvent == null) deselectedEvent = new DeselectedEvent();
+		if (clickedEvent == null) clickedEvent = new ClickedEvent();
 
-		animator = GetComponent<Animator>();
+		isVisible = false;
+
 		canvas = GetComponent<Canvas>();
 	}
 
 	void Update() {
 
-	Vector2 target = new Vector2(targetPosition.x, targetPosition.y);
+		Vector2 target = new Vector2(targetPosition.x, targetPosition.y);
 
 		if (isSelected)
 			target = new Vector2(targetPosition.x, 0);	
@@ -122,6 +129,10 @@ public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
 
 	public void OnDeselect(BaseEventData eventData) {
 		isSelected = false;		
+	}
+
+	public void handleClick() {
+		clickedEvent.Invoke(this);
 	}
 
 }
