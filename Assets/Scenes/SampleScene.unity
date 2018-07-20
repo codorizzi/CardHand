@@ -322,6 +322,11 @@ Prefab:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 114545435098010570, guid: f48e561dee21c4c43a7bc6503bbae286,
+        type: 2}
+      propertyPath: overlapPercent
+      value: 0.5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f48e561dee21c4c43a7bc6503bbae286, type: 2}
   m_IsPrefabAsset: 0

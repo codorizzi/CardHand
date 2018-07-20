@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 using System.Linq;
 
 public class CardHand : MonoBehaviour {
@@ -80,6 +81,16 @@ public class CardHand : MonoBehaviour {
 			
 			card.position = new Vector2(x, y);
 
+			Card left = null;
+			if (i > 0)
+				left = cards[i - 1];
+
+			Card right = null;
+			if (i < cards.Count - 1)
+				right = cards[i + 1];
+
+			setNavigation(card, left, right);
+
 			card.sortOrder = i;
 
 		}
@@ -146,6 +157,27 @@ public class CardHand : MonoBehaviour {
 	}		
 
 	private void handleCardClick(Card card) {		
+	}
+
+	private void setNavigation(Card card, Card left, Card right) {
+
+		Selectable
+			leftButton = null, 
+			rightButton = null;
+
+		if (left != null)
+			leftButton = left.GetComponent<Selectable>();
+
+		if (right != null)
+			rightButton = right.GetComponent<Selectable>();		
+
+		Navigation nav = card.GetComponent<Button>().navigation;
+
+		nav.selectOnLeft = leftButton;
+		nav.selectOnRight = rightButton;
+
+		card.GetComponent<Button>().navigation = nav;		
+
 	}
 
 }
