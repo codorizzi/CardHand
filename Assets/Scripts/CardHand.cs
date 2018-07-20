@@ -87,9 +87,7 @@ public class CardHand : MonoBehaviour {
 
 	private float getCardXOffset(float cardWidth, int position) {
 
-		float offset = cardWidth * overlapPercent;
-
-		Debug.Log(cardWidth);
+		float offset = cardWidth * overlapPercent;		
 
 		bool isOddNumber = (cards.Count % 2) == 0 ? false : true;		
 

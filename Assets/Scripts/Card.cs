@@ -32,18 +32,19 @@ public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
 	public bool isSelected {
 		get { return _isSelected; }
 		set {
-
-			//zoomed = value;
+			
 			_isSelected = value;
 
 			if (value) {
 				transform.eulerAngles = new Vector3(0, 0, 0);
 				canvas.sortingOrder = 99;
 				selectedEvent.Invoke(this);
+				GetComponent<Animator>().Play("CardSelect");
 			} else {
 				canvas.sortingOrder = _sortOrder;
 				transform.eulerAngles = new Vector3(0, 0, _angle);
 				deselectedEvent.Invoke(this);
+				GetComponent<Animator>().Play("CardDeselect");
 			}
 
 		}
